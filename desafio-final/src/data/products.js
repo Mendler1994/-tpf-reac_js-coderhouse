@@ -3,22 +3,24 @@ const products = [
     id: 1,
     title: "Zapatillas Nike",
     price: 120,
-    category: "calzado",
-    stock: 10
+    stock: 10,
+    category: "calzado"
   },
+
   {
     id: 2,
     title: "Remera Adidas",
     price: 60,
-    category: "ropa",
-    stock: 15
+    stock: 15,
+    category: "ropa"
   },
+
   {
     id: 3,
     title: "Gorra Puma",
     price: 35,
-    category: "accesorios",
-    stock: 20
+    stock: 20,
+    category: "accesorios"
   }
 ]
 
