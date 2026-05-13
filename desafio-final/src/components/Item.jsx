@@ -1,17 +1,32 @@
 import { Link } from "react-router-dom"
+import "../styles/Item.css"
 
 function Item({ product }) {
   return (
-    <div style={{ border: "1px solid gray", padding: "10px", margin: "10px" }}>
-      <h3>{product.title}</h3>
+    <div className="item-card">
 
-      <p>Precio: ${product.price}</p>
+      <img
+        src={product.img}
+        alt={product.title}
+      />
 
-      <p>Stock: {product.stock}</p>
+      <div className="item-info">
 
-      <Link to={`/item/${product.id}`}>
-        Ver detalle
-      </Link>
+        <h3>{product.title}</h3>
+
+        <p>{product.description}</p>
+
+        <p>${product.price}</p>
+
+        <Link
+          to={`/item/${product.id}`}
+          className="item-link"
+        >
+          Ver detalle
+        </Link>
+
+      </div>
+
     </div>
   )
 }

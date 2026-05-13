@@ -1,6 +1,7 @@
 import { useContext, useState } from "react"
 import ItemCount from "./ItemCount"
 import { CartContext } from "../context/CartContext"
+import "../styles/ItemDetail.css"
 
 function ItemDetail({ product }) {
   const [added, setAdded] = useState(false)
@@ -14,21 +15,41 @@ function ItemDetail({ product }) {
   }
 
   return (
-    <div style={{ border: "2px solid black", padding: "20px" }}>
-      <h2>{product.title}</h2>
+    <div className="detail-container">
 
-      <p>Precio: ${product.price}</p>
+      <img
+        src={product.img}
+        alt={product.title}
+        className="detail-image"
+      />
 
-      <p>Stock: {product.stock}</p>
+      <div className="detail-info">
 
-      {!added ? (
-        <ItemCount
-          stock={product.stock}
-          onAdd={handleAddToCart}
-        />
-      ) : (
-        <h3>Producto agregado al carrito ✅</h3>
-      )}
+        <h2>{product.title}</h2>
+
+        <p>{product.description}</p>
+
+        <p className="detail-price">
+          ${product.price}
+        </p>
+
+        <p>
+          Stock disponible: {product.stock}
+        </p>
+
+        {!added ? (
+          <ItemCount
+            stock={product.stock}
+            onAdd={handleAddToCart}
+          />
+        ) : (
+          <p className="added-message">
+            Producto agregado al carrito ✅
+          </p>
+        )}
+
+      </div>
+
     </div>
   )
 }
