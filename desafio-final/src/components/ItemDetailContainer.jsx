@@ -2,12 +2,11 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { getProductById } from "../firebase/firestore"
 import ItemDetail from "./ItemDetail"
+import Loader from "./Loader"
 
 function ItemDetailContainer() {
   const [product, setProduct] = useState(null)
-
   const [loading, setLoading] = useState(true)
-
   const { id } = useParams()
 
   useEffect(() => {
@@ -24,7 +23,7 @@ function ItemDetailContainer() {
   }, [id])
 
   if (loading) {
-    return <h2>Cargando detalle...</h2>
+    return <Loader />
   }
 
   if (!product) {

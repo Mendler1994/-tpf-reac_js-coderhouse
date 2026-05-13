@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { getProducts } from "../firebase/firestore"
 import ItemList from "./ItemList"
+import Loader from "./Loader"
 
 function ItemListContainer() {
   const [products, setProducts] = useState([])
@@ -38,7 +39,7 @@ function ItemListContainer() {
   }, [categoryId])
 
   if (loading) {
-    return <h2>Cargando productos...</h2>
+    return <Loader />
   }
 
   return (

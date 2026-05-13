@@ -1,21 +1,26 @@
 import { useContext, useState } from "react"
 import ItemCount from "./ItemCount"
+import Toast from "./Toast"
 import { CartContext } from "../context/CartContext"
 import "../styles/ItemDetail.css"
 
 function ItemDetail({ product }) {
-  const [added, setAdded] = useState(false)
-
+  const [showToast, setShowToast] = useState(false)
   const { addItem } = useContext(CartContext)
-
   const handleAddToCart = (quantity) => {
     addItem(product, quantity)
-
-    setAdded(true)
+    setShowToast(true)
+    setTimeout(() => {
+      setShowToast(false)
+    }, 2000)
   }
 
   return (
     <div className="detail-container">
+
+      {showToast && (
+        <Toast message="Producto agregado al carrito 🛒" />
+      )}
 
       <img
         src={product.img}
@@ -26,9 +31,7 @@ function ItemDetail({ product }) {
       <div className="detail-info">
 
         <h2>{product.title}</h2>
-
         <p>{product.description}</p>
-
         <p className="detail-price">
           ${product.price}
         </p>
@@ -37,19 +40,11 @@ function ItemDetail({ product }) {
           Stock disponible: {product.stock}
         </p>
 
-        {!added ? (
-          <ItemCount
-            stock={product.stock}
-            onAdd={handleAddToCart}
-          />
-        ) : (
-          <p className="added-message">
-            Producto agregado al carrito ✅
-          </p>
-        )}
-
+        <ItemCount
+          stock={product.stock}
+          onAdd={handleAddToCart}
+        />
       </div>
-
     </div>
   )
 }
