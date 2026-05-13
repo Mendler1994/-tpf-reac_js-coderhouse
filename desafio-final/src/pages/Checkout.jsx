@@ -1,5 +1,6 @@
 import { useContext, useState } from "react"
 import { CartContext } from "../context/CartContext"
+import { createOrder } from "../firebase/firestore"
 
 function Checkout() {
   const { cart, total, clearCart } = useContext(CartContext)
@@ -8,28 +9,25 @@ function Checkout() {
   const [phone, setPhone] = useState("")
   const [email, setEmail] = useState("")
   const [orderId, setOrderId] = useState(null)
-  const handleSubmit = (event) => {
-    event.preventDefault()
+  const handleSubmit = async (event) => {
+  event.preventDefault()
 
-    const order = {
-      buyer: {
-        name,
-        phone,
-        email
-      },
+  const order = {
+    buyer: {
+      name,
+      phone,
+      email
+    },
 
-      items: cart,
-      total,
-      date: new Date()
-    }
-
-    console.log(order)
-
-    const fakeOrderId = Math.floor(Math.random() * 100000)
-
-    setOrderId(fakeOrderId)
-    clearCart()
+    items: cart,
+    total,
+    date: new Date()
   }
+
+  const orderId = await createOrder(order)
+  setOrderId(orderId)
+  clearCart()
+}
 
   if (orderId) {
     return (

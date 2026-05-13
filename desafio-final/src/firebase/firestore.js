@@ -2,7 +2,8 @@ import {
   collection,
   getDocs,
   getDoc,
-  doc
+  doc,
+  addDoc
 } from "firebase/firestore"
 
 import { db } from "./firebaseConfig"
@@ -30,7 +31,6 @@ export const getProducts = async () => {
 }
 
 export const getProductById = async (id) => {
-
   try {
     const productRef = doc(db, "products", id)
     const snapshot = await getDoc(productRef)
@@ -43,5 +43,18 @@ export const getProductById = async (id) => {
   } catch (error) {
     console.log(error)
     return null
+  }
+}
+
+export const createOrder = async (order) => {
+  try {
+    const ordersRef = collection(db, "orders")
+    const docRef = await addDoc(ordersRef, order)
+    return docRef.id
+    
+  } catch (error) {
+    console.log(error)
+    return null
+
   }
 }
