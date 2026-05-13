@@ -2,14 +2,13 @@ import { initializeApp } from "firebase/app"
 import { getFirestore } from "firebase/firestore"
 
 const firebaseConfig = {
-  apiKey: "TU_API_KEY",
-  authDomain: "TU_AUTH_DOMAIN",
-  projectId: "TU_PROJECT_ID",
-  storageBucket: "TU_STORAGE_BUCKET",
-  messagingSenderId: "TU_MESSAGING_SENDER_ID",
-  appId: "TU_APP_ID"
+  apiKey: "AIzaSyBGKlOYH_-GDtzcWbfeJ7mSMOaxFvvOxpQ",
+  authDomain: "react-ecommerce-d5304.firebaseapp.com",
+  projectId: "react-ecommerce-d5304",
+  storageBucket: "react-ecommerce-d5304.firebasestorage.app",
+  messagingSenderId: "1076505271102",
+  appId: "1:1076505271102:web:80a316985aad6a22b9ea6f"
 }
 
 const app = initializeApp(firebaseConfig)
-
 export const db = getFirestore(app)
