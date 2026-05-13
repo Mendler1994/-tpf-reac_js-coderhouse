@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import productsData from "../data/products"
+import { getProductById } from "../mock/asyncMock"
 import ItemDetail from "./ItemDetail"
 
 function ItemDetailContainer() {
@@ -13,19 +13,13 @@ function ItemDetailContainer() {
   useEffect(() => {
     setLoading(true)
 
-    const timer = setTimeout(() => {
-
-      const foundProduct = productsData.find(
-        item => item.id === Number(id)
-      )
-
-      setProduct(foundProduct)
-
-      setLoading(false)
-
-    }, 1000)
-
-    return () => clearTimeout(timer)
+    getProductById(id)
+      .then((response) => {
+        setProduct(response)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
 
   }, [id])
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import productsData from "../data/products"
+import { getProducts } from "../mock/asyncMock"
 import ItemList from "./ItemList"
 
 function ItemListContainer() {
@@ -13,27 +13,27 @@ function ItemListContainer() {
   useEffect(() => {
     setLoading(true)
 
-    const timer = setTimeout(() => {
+    getProducts()
+      .then((response) => {
 
-      if (categoryId) {
+        if (categoryId) {
 
-        const filteredProducts = productsData.filter(
-          product => product.category === categoryId
-        )
+          const filteredProducts = response.filter(
+            product => product.category === categoryId
+          )
 
-        setProducts(filteredProducts)
+          setProducts(filteredProducts)
 
-      } else {
+        } else {
 
-        setProducts(productsData)
+          setProducts(response)
 
-      }
+        }
 
-      setLoading(false)
-
-    }, 1000)
-
-    return () => clearTimeout(timer)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
 
   }, [categoryId])
 
