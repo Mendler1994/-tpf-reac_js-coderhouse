@@ -1,6 +1,7 @@
 import { useContext } from "react"
 import { CartContext } from "../context/CartContext"
 import "../styles/Cart.css"
+import { Link } from "react-router-dom"
 
 function Cart() {
   const {
@@ -65,6 +66,12 @@ function Cart() {
         </button>
 
       </div>
+
+      <Link to="/checkout">
+        <button>
+          Terminar compra
+        </button>
+      </Link>
 
     </div>
   )
