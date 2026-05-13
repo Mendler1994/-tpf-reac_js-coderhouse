@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { getProductById } from "../mock/asyncMock"
+import { getProductById } from "../firebase/firestore"
 import ItemDetail from "./ItemDetail"
 
 function ItemDetailContainer() {
