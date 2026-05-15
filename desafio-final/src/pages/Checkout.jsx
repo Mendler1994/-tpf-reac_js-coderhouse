@@ -4,17 +4,31 @@ import { createOrder } from "../firebase/firestore"
 import "../styles/Checkout.css"
 
 function Checkout() {
+  const {
+    cart,
+    total,
+    clearCart
+  } = useContext(CartContext)
 
-  const { cart, total, clearCart } =
-    useContext(CartContext)
   const [name, setName] = useState("")
   const [phone, setPhone] = useState("")
   const [email, setEmail] = useState("")
   const [errors, setErrors] = useState({})
   const [orderId, setOrderId] = useState("")
+  const [loading, setLoading] = useState(false)
+
+  if (cart.length === 0 && !orderId) {
+    return (
+      <div className="checkout-container">
+        <h2>
+          No hay productos en el carrito 🛒
+        </h2>
+      </div>
+    )
+  }
+
   const validateForm = () => {
     const newErrors = {}
-
     if (!name.trim()) {
       newErrors.name =
         "Ingresá tu nombre"
@@ -31,10 +45,8 @@ function Checkout() {
 
     } else if (
       !/\S+@\S+\.\S+/.test(email)
-    ) {
-      newErrors.email =
-        "Email inválido"
-    }
+    ) {newErrors.email =
+      "Email inválido"}
 
     setErrors(newErrors)
 
@@ -43,12 +55,13 @@ function Checkout() {
   }
 
   const handleSubmit = async (event) => {
+
     event.preventDefault()
     const isValid = validateForm()
-
     if (!isValid) return
-    const order = {
+    setLoading(true)
 
+    const order = {
       buyer: {
         name,
         phone,
@@ -58,8 +71,18 @@ function Checkout() {
       total,
       date: new Date()
     }
+
     const id = await createOrder(order)
+
+    if (!id) {
+      alert(
+        "Error al generar la orden"
+      )
+      setLoading(false)
+      return
+    }
     setOrderId(id)
+    setLoading(false)
     clearCart()
   }
 
@@ -69,9 +92,11 @@ function Checkout() {
         <h2>
           ¡Gracias por tu compra! 🎉
         </h2>
+
         <p>
           Tu ID de orden es:
         </p>
+
         <strong>{orderId}</strong>
       </div>
     )
@@ -80,8 +105,8 @@ function Checkout() {
   return (
     <div className="checkout-container">
       <h2>Checkout</h2>
-      <form onSubmit={handleSubmit}>
 
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Nombre"
@@ -127,8 +152,15 @@ function Checkout() {
           </p>
         )}
 
-        <button type="submit">
-          Finalizar compra
+        <button
+          type="submit"
+          disabled={loading}
+        >
+
+          {loading
+            ? "Procesando compra..."
+            : "Finalizar compra"}
+
         </button>
       </form>
     </div>
