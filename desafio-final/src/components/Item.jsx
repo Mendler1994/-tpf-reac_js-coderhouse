@@ -1,20 +1,13 @@
-import { Link } from "react-router-dom"
 import { useContext } from "react"
-import { CartContext } from "../context/CartContext"
-import "../styles/Item.css"
-
-const {
-  addItem,
-  getProductQuantity
-} = useContext(CartContext)
-const quantityInCart =
-  getProductQuantity(product.id)
-const availableStock =
-  product.stock - quantityInCart
+import { Link } from "react-router-dom"
+import { CartContext }
+from "../context/CartContext"
 
 function Item({ product }) {
-
-  const { addItem } = useContext(CartContext)
+  const {
+    addItem,
+    getProductQuantity
+  } = useContext(CartContext)
 
   return (
     <div className="item-card">
@@ -25,39 +18,34 @@ function Item({ product }) {
       />
 
       <div className="item-info">
+
         <h3>{product.title}</h3>
         <p>{product.description}</p>
-        <p>${product.price}</p>
+
         <p>
-          Stock disponible: {availableStock}
+          Precio: ${product.price}
+        </p>
+
+        <p>
+          Stock: {product.stock}
         </p>
 
         <div className="item-buttons">
+
           <Link
             to={`/item/${product.id}`}
-            className="item-link"
-          >
+            className="item-link">
             Ver producto
           </Link>
 
           <button
             className="quick-add-btn"
-            disabled={availableStock === 0}
-            
-            onClick={() => {
-              if (availableStock > 0) {
-                addItem(product, 1)
-              }
-            }}
-          >
-            {availableStock > 0
-              ? "Añadir al carrito"
-              : "Sin stock"}
+            onClick={() =>
+              addItem(product, 1)}>
+            Añadir al carrito
           </button>
-
         </div>
       </div>
-
     </div>
   )
 }
