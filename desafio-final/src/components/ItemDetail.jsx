@@ -1,50 +1,86 @@
 import { useContext, useState } from "react"
+import { Link } from "react-router-dom"
 import ItemCount from "./ItemCount"
-import Toast from "./Toast"
+import ToastContainer from "./ToastContainer"
 import { CartContext } from "../context/CartContext"
 import "../styles/ItemDetail.css"
 
 function ItemDetail({ product }) {
-  const [showToast, setShowToast] = useState(false)
-  const { addItem } = useContext(CartContext)
+
+  const {
+    addItem,
+    getProductQuantity
+  } = useContext(CartContext)
+
+  const [toasts, setToasts] = useState([])
+
+  const quantityInCart =
+    getProductQuantity(product.id)
+
+  const availableStock =
+    product.stock - quantityInCart
+
   const handleAddToCart = (quantity) => {
     addItem(product, quantity)
-    setShowToast(true)
+
+    const newToast = {
+      id: Date.now(),
+      message: "Producto agregado al carrito 🛒"
+    }
+
+    setToasts(prev => [
+      ...prev,
+      newToast
+    ])
+
     setTimeout(() => {
-      setShowToast(false)
+      setToasts(prev =>
+        prev.filter(
+          toast => toast.id !== newToast.id
+        )
+      )
     }, 2000)
+
   }
 
   return (
     <div className="detail-container">
 
-      {showToast && (
-        <Toast message="Producto agregado al carrito 🛒" />
-      )}
-
       <img
+        className="detail-image"
         src={product.img}
         alt={product.title}
-        className="detail-image"
       />
 
       <div className="detail-info">
 
         <h2>{product.title}</h2>
         <p>{product.description}</p>
+
         <p className="detail-price">
           ${product.price}
         </p>
 
         <p>
-          Stock disponible: {product.stock}
+          Stock disponible:
+          {availableStock}
         </p>
 
         <ItemCount
-          stock={product.stock}
+          stock={availableStock}
           onAdd={handleAddToCart}
         />
+
+        <Link to="/cart">
+          <button className="add-cart-button">
+            Ver carrito
+          </button>
+        </Link>
+
       </div>
+
+      <ToastContainer toasts={toasts} />
+
     </div>
   )
 }

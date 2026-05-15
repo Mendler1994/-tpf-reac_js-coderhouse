@@ -1,0 +1,16 @@
+.error-message {
+  color: #c0392b;
+  font-size: 14px;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+  .checkout-container {
+    padding: 20px;
+  }
+
+  form {
+    width: 100%;
+  }
+}

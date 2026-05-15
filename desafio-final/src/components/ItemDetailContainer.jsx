@@ -11,7 +11,6 @@ function ItemDetailContainer() {
 
   useEffect(() => {
     setLoading(true)
-
     getProductById(id)
       .then((response) => {
         setProduct(response)
@@ -19,7 +18,6 @@ function ItemDetailContainer() {
       .finally(() => {
         setLoading(false)
       })
-
   }, [id])
 
   if (loading) {

@@ -1,88 +1,136 @@
 import { useContext, useState } from "react"
 import { CartContext } from "../context/CartContext"
 import { createOrder } from "../firebase/firestore"
+import "../styles/Checkout.css"
 
 function Checkout() {
-  const { cart, total, clearCart } = useContext(CartContext)
 
+  const { cart, total, clearCart } =
+    useContext(CartContext)
   const [name, setName] = useState("")
   const [phone, setPhone] = useState("")
   const [email, setEmail] = useState("")
-  const [orderId, setOrderId] = useState(null)
-  const handleSubmit = async (event) => {
-  event.preventDefault()
+  const [errors, setErrors] = useState({})
+  const [orderId, setOrderId] = useState("")
+  const validateForm = () => {
+    const newErrors = {}
 
-  const order = {
-    buyer: {
-      name,
-      phone,
-      email
-    },
+    if (!name.trim()) {
+      newErrors.name =
+        "Ingresá tu nombre"
+    }
 
-    items: cart,
-    total,
-    date: new Date()
+    if (!phone.trim()) {
+      newErrors.phone =
+        "Ingresá tu teléfono"
+    }
+
+    if (!email.trim()) {
+      newErrors.email =
+        "Ingresá tu email"
+
+    } else if (
+      !/\S+@\S+\.\S+/.test(email)
+    ) {
+      newErrors.email =
+        "Email inválido"
+    }
+
+    setErrors(newErrors)
+
+    return Object.keys(newErrors)
+      .length === 0
   }
 
-  const orderId = await createOrder(order)
-  setOrderId(orderId)
-  clearCart()
-}
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    const isValid = validateForm()
+
+    if (!isValid) return
+    const order = {
+
+      buyer: {
+        name,
+        phone,
+        email
+      },
+      items: cart,
+      total,
+      date: new Date()
+    }
+    const id = await createOrder(order)
+    setOrderId(id)
+    clearCart()
+  }
 
   if (orderId) {
     return (
-      <div style={{ padding: "40px" }}>
-        <h2>Compra realizada ✅</h2>
-        <h3>ID de la orden:</h3>
-        <p>{orderId}</p>
+      <div className="checkout-container">
+        <h2>
+          ¡Gracias por tu compra! 🎉
+        </h2>
+        <p>
+          Tu ID de orden es:
+        </p>
+        <strong>{orderId}</strong>
       </div>
     )
   }
 
   return (
-    <div style={{ padding: "40px" }}>
+    <div className="checkout-container">
       <h2>Checkout</h2>
-
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "20px",
-          maxWidth: "400px"
-        }}
-      >
+      <form onSubmit={handleSubmit}>
 
         <input
           type="text"
           placeholder="Nombre"
           value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
+          onChange={(e) =>
+            setName(e.target.value)
+          }
         />
+
+        {errors.name && (
+          <p className="error-message">
+            {errors.name}
+          </p>
+        )}
 
         <input
           type="text"
           placeholder="Teléfono"
           value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          required
+          onChange={(e) =>
+            setPhone(e.target.value)
+          }
         />
+
+        {errors.phone && (
+          <p className="error-message">
+            {errors.phone}
+          </p>
+        )}
 
         <input
           type="email"
           placeholder="Email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
+          onChange={(e) =>
+            setEmail(e.target.value)
+          }
         />
+
+        {errors.email && (
+          <p className="error-message">
+            {errors.email}
+          </p>
+        )}
 
         <button type="submit">
           Finalizar compra
         </button>
-
       </form>
-
     </div>
   )
 }

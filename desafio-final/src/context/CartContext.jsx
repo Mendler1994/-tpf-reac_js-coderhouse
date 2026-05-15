@@ -1,9 +1,27 @@
-import { createContext, useState } from "react"
+import {
+  createContext,
+  useState,
+  useEffect
+} from "react"
 
 export const CartContext = createContext()
 export function CartProvider({ children }) {
 
-  const [cart, setCart] = useState([])
+const [cart, setCart] = useState(() => {
+  const savedCart =
+    localStorage.getItem("cart")
+  return savedCart
+    ? JSON.parse(savedCart)
+    : []
+})
+
+useEffect(() => {
+  localStorage.setItem(
+    "cart",
+    JSON.stringify(cart)
+  )
+}, [cart])
+
   const addItem = (product, quantity) => {
     const existingProduct = cart.find(
       item => item.id === product.id
@@ -14,7 +32,10 @@ export function CartProvider({ children }) {
         if (item.id === product.id) {
           return {
             ...item,
-            quantity: item.quantity + quantity
+            quantity: Math.min(
+              item.quantity + quantity,
+              item.stock
+            )
           }
         }
         return item
@@ -69,14 +90,21 @@ export function CartProvider({ children }) {
       }
       return item
     })
-
     setCart(updatedCart)
+  }
+
+  
+  const getProductQuantity = (id) => {
+    const productInCart = cart.find(
+      item => item.id === id)
+    return productInCart
+      ? productInCart.quantity
+      : 0
   }
 
   const clearCart = () => {
     setCart([])
   }
-
   const total = cart.reduce((acc, item) => {
     return acc + item.price * item.quantity
   }, 0)
@@ -84,6 +112,7 @@ export function CartProvider({ children }) {
   return (
     <CartContext.Provider
       value={{
+        getProductQuantity,
         cart,
         addItem,
         removeItem,
